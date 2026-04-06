@@ -1,0 +1,15 @@
+[Unit]
+Description=BirdWatch Detector
+After=network.target
+
+[Service]
+User=salcxjo
+WorkingDirectory=/home/salcxjo/BirdWatch
+ExecStart=/home/salcxjo/BirdWatch/venv/bin/python detector.py
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/salcxjo/BirdWatch/logs/detector.log
+StandardError=append:/home/salcxjo/BirdWatch/logs/detector.log
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="hero">
+  <div class="hero-text">
+    <h1>BirdWatch</h1>
+    <p class="subtitle">Edmonton Balcony Field Station</p>
+  </div>
+  <div class="stats-row">
+    <div class="stat-pill">
+      <span class="stat-num">{{ today_count }}</span>
+      <span class="stat-label">visits today</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-num">{{ total_species }}</span>
+      <span class="stat-label">species logged</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">▸ Latest Detection</div>
+<div class="latest-wrap">
+  <img src="/latest?t={{ range(99999)|random }}" class="latest-img"
+       onerror="this.alt='Waiting for birds...'; this.style.opacity=0.3"
+       id="latest-img" alt="Latest detection">
+  <script>
+    setInterval(() => {
+      const img = document.getElementById('latest-img');
+      img.src = '/latest?t=' + Date.now();
+    }, 10000);
+  </script>
+</div>
+
+<div class="charts-row">
+  <div class="chart-card">
+    <div class="chart-title">Today's Activity</div>
+    <canvas id="todayChart" height="140"></canvas>
+    <div class="chart-empty" id="todayEmpty" style="display:none">No detections today yet</div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">Peak Hours (All Time)</div>
+    <canvas id="allTimeChart" height="140"></canvas>
+  </div>
+</div>
+
+<div class="section-label">▸ Recent Visitors</div>
+<div class="tile-grid">
+{% for d in recent %}
+  <div class="tile">
+    <div class="tile-img-wrap">
+      <img src="/detections/{{ d['image_path']|basename }}" alt="{{ d['species'] }}" loading="lazy">
+    </div>
+    <div class="tile-info">
+      <span class="tile-species">{{ d['species'] }}</span>
+      <span class="tile-meta">{{ (d['confidence']*100)|int }}% · {{ d['timestamp'][11:16] }}</span>
+    </div>
+  </div>
+{% endfor %}
+</div>
+
+<script>
+fetch('/api/stats').then(r => r.json()).then(data => {
+  const allHours = Array.from({length: 24}, (_, i) => i);
+  const fmt = h => h + ':00';
+
+  // Today chart
+  if (data.hourly.length === 0) {
+    document.getElementById('todayEmpty').style.display = 'block';
+    document.getElementById('todayChart').style.display = 'none';
+  } else {
+    const todayCounts = allHours.map(h => {
+      const found = data.hourly.find(d => d.hour === h);
+      return found ? found.count : 0;
+    });
+    new Chart(document.getElementById('todayChart'), {
+      type: 'bar',
+      data: {
+        labels: allHours.map(fmt),
+        datasets: [{ data: todayCounts, backgroundColor: '#7ec99a', borderRadius: 3 }]
+      },
+      options: chartOpts()
+    });
+  }
+
+  // All-time peak hours
+  const allCounts = allHours.map(h => {
+    const found = data.all_time_hourly.find(d => d.hour === h);
+    return found ? found.count : 0;
+  });
+  new Chart(document.getElementById('allTimeChart'), {
+    type: 'bar',
+    data: {
+      labels: allHours.map(fmt),
+      datasets: [{ data: allCounts, backgroundColor: '#b8860b', borderRadius: 3 }]
+    },
+    options: chartOpts()
+  });
+});
+
+function chartOpts() {
+  return {
+    plugins: { legend: { display: false } },
+    scales: {
+      x: {
+        ticks: {
+          color: '#6b7f6e',
+          maxTicksLimit: 8,
+          font: { size: 10 }
+        },
+        grid: { color: '#1e2f22' }
+      },
+      y: {
+        ticks: { color: '#6b7f6e', font: { size: 10 } },
+        grid: { color: '#1e2f22' },
+        beginAtZero: true
+      }
+    }
+  };
+}
+</script>
+{% endblock %}

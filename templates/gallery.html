@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+  <h2>Species Gallery</h2>
+  <span class="page-sub">{{ species_list|length }} species identified on your balcony</span>
+</div>
+
+{% if species_list %}
+<div class="species-grid">
+{% for s in species_list %}
+  <div class="species-card">
+    <div class="species-photos">
+      <div class="photo-slot">
+        <img src="/detections/{{ s['image_path']|basename }}"
+             alt="{{ s['species'] }}" loading="lazy">
+        <span class="photo-badge">Your photo</span>
+      </div>
+      <div class="photo-slot ref-slot">
+        <img src="/wiki-image/{{ s['species'] }}"
+             alt="Reference"
+             onerror="this.parentElement.classList.add('no-ref')">
+        <span class="photo-badge">Reference</span>
+      </div>
+    </div>
+    <div class="species-info">
+      <div class="species-name">{{ s['species'] }}</div>
+      <div class="species-stats">
+        <span>{{ s['count'] }} visits</span>
+        <span>{{ (s['best_confidence']*100)|int }}% best</span>
+      </div>
+      <div class="species-date">Last: {{ s['last_seen'][:16] }}</div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+{% else %}
+<div class="empty-state">🐦 No species identified yet — check back soon</div>
+{% endif %}
+
+{% endblock %}

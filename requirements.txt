@@ -1,0 +1,19 @@
+# BirdWatch Python dependencies
+# Install in a Python 3.11 venv (see README for setup instructions)
+
+opencv-python-headless
+numpy
+pillow
+flask
+requests
+astral
+python-dotenv
+paho-mqtt==1.6.1
+
+# TFLite runtime — install separately via wheel (see README)
+# For aarch64 + Python 3.11:
+# pip install https://github.com/google-coral/pycoral/releases/download/v2.0.0/tflite_runtime-2.5.0.post1-cp311-cp311-linux_aarch64.whl
+#
+# If unavailable, install full TensorFlow instead:
+# pip install tensorflow
+# classifier.py falls back to tensorflow.lite automatically

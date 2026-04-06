@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.env
+
+# Data — don't commit personal detection photos or DB
+detections/
+data/
+logs/
+
+# Model files — too large for git, download separately
+model/*.tflite
+model/*.csv
+model/*.json
+
+# Dataset — large, generated locally
+dataset/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp

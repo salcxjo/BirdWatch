@@ -1,0 +1,15 @@
+[Unit]
+Description=BirdWatch Web UI
+After=network.target
+
+[Service]
+User=salcxjo
+WorkingDirectory=/home/salcxjo/BirdWatch
+ExecStart=/home/salcxjo/BirdWatch/venv/bin/python app.py
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/salcxjo/BirdWatch/logs/app.log
+StandardError=append:/home/salcxjo/BirdWatch/logs/app.log
+
+[Install]
+WantedBy=multi-user.target

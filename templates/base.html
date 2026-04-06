@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BirdWatch 🐦</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav>
+    <div class="nav-brand">
+      <span class="nav-icon">🐦</span>
+      <span class="nav-title">BirdWatch</span>
+    </div>
+    <div class="nav-links">
+      <a href="/">Dashboard</a>
+      <a href="/gallery">Gallery</a>
+      <a href="/logs">Log</a>
+    </div>
+  </nav>
+  <main>{% block content %}{% endblock %}</main>
+  <footer>
+    <span>BirdWatch · Edmonton Balcony Station</span>
+  </footer>
+</body>
+</html>

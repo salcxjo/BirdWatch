@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+  <h2>Visit Log</h2>
+  <span class="page-sub">Last {{ rows|length }} confirmed detections</span>
+</div>
+
+{% if rows %}
+<div class="tile-grid">
+{% for r in rows %}
+  <div class="tile">
+    <div class="tile-img-wrap">
+      <a href="/detections/{{ r['image_path']|basename }}" target="_blank">
+        <img src="/detections/{{ r['image_path']|basename }}"
+             alt="{{ r['species'] }}" loading="lazy">
+      </a>
+      <div class="tile-ref">
+        <img src="/wiki-image/{{ r['species'] }}"
+             alt=""
+             onerror="this.style.display='none'">
+      </div>
+    </div>
+    <div class="tile-info">
+      <span class="tile-species">{{ r['species'] }}</span>
+      <span class="tile-meta">
+        {{ (r['confidence']*100)|int }}%
+        · {{ r['classifier_source'] }}
+        · {{ r['timestamp'][:16] }}
+      </span>
+    </div>
+  </div>
+{% endfor %}
+</div>
+{% else %}
+<div class="empty-state">No visits logged yet</div>
+{% endif %}
+
+{% endblock %}
